@@ -1,0 +1,11 @@
+<h1>Tweets#index</h1>
+
+<input type="text" id="tweet" placeholder="Input Tweet Topic Here">
+<button id="tweet_button">Seach</button>
+
+<% @tweets.each do |tweet| %>
+  <p><%= tweet.text %></p>
+  <a href="https://twitter.com/twitter/statuses/<%= tweet.tweet_id %>" target="_blank">
+    View Tweet
+  </a>
+<% end %>
