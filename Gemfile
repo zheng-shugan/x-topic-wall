@@ -68,5 +68,9 @@ end
 # Gemfile
 # 开发环境组中添加
 group :development, :test do
-  gem 'faker', '~> 3.2'  # 推荐指定版本
+  gem "faker", "~> 3.2"  # 推荐指定版本
 end
+
+gem "dotenv-rails", "~> 3.1"
+
+gem "sitemap_generator"

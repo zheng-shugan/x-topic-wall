@@ -1,23 +1,36 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "X Topic Wall" %></title>
+    <!-- 动态标题 -->
+    <title><%= content_for?(:title) ? yield(:title) : "X Topic Wall - Explore Trending Topics" %></title>
+
+    <!-- Meta 标签 -->
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+    <meta name="description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : "Discover trending topics and tweets on X Topic Wall. Search and explore tweets easily." %>">
+    <meta name="keywords" content="<%= content_for?(:meta_keywords) ? yield(:meta_keywords) : "tweets, trending topics, X, social media" %>">
+    <meta name="author" content="X Topic Wall Team">
 
-    <%= yield :head %>
+    <!-- Open Graph 标签 -->
+    <meta property="og:title" content="<%= content_for?(:title) ? yield(:title) : "X Topic Wall - Explore Trending Topics" %>">
+    <meta property="og:description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : "Discover trending topics and tweets on X Topic Wall. Search and explore tweets easily." %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= request.original_url %>">
+    <meta property="og:image" content="<%= asset_path('default-og-image.png') %>">
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <!-- Twitter Card 标签 -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<%= content_for?(:title) ? yield(:title) : "X Topic Wall - Explore Trending Topics" %>">
+    <meta name="twitter:description" content="<%= content_for?(:meta_description) ? yield(:meta_description) : "Discover trending topics and tweets on X Topic Wall. Search and explore tweets easily." %>">
+    <meta name="twitter:image" content="<%= asset_path('default-twitter-image.png') %>">
 
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
+    <!-- Favicon 和图标 -->
+    <link rel="icon" href="/favicon/favicon-32x32.png" type="image/png">
+    <link rel="icon" href="/favicon/favicon.icn" type="image/png">
+    <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <!-- 样式表 -->
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
