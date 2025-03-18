@@ -1,10 +1,10 @@
-<h1 style="text-align: center; font-family: Arial, sans-serif; color: #333;">X Topic Wall</h1>
+<h1 style="text-align: center; font-family: Arial, sans-serif; color: #d30001;">X Topic Wall</h1>
 
 <div style="text-align: center; margin-bottom: 20px;">
   <input type="text" id="tweet" placeholder="Input Topic Here" 
          style="padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 5px;">
   <button id="tweet_button" 
-          style="padding: 10px 20px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+          style="padding: 10px 20px; background-color: #d30001; color: white; border: none; border-radius: 5px; cursor: pointer;">
     Search
   </button>
 </div>
@@ -14,12 +14,12 @@
     <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
       <p style="font-size: 16px; color: #555;"><%= tweet.text %></p>
       <a href="https://twitter.com/twitter/statuses/<%= tweet.tweet_id %>" target="_blank" 
-         style="color: #007bff; text-decoration: none; margin-right: 10px;">
+         style="color: #d30001; text-decoration: none; margin-right: 10px;">
         View On X
       </a>
       <%= link_to "View Detail", tweet_path(tweet.tweet_id), 
                   class: "btn btn-primary", 
-                  style: "padding: 5px 10px; background-color: #28a745; color: white; text-decoration: none; border-radius: 3px;" %>
+                  style: "padding: 5px 10px; background-color: #d30001; color: white; text-decoration: none; border-radius: 3px;" %>
     </div>
   <% end %>
 </div>

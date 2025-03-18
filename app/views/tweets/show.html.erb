@@ -1,5 +1,5 @@
 <div style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-  <h1 style="text-align: center; font-size: 28px; color: #007bff;">Details</h1>
+  <h1 style="text-align: center; font-size: 28px; color: #d30001;">Tweet Details</h1>
 
   <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
     <p><strong>Tweet ID:</strong> <span style="color: #555;"><%= @tweet.tweet_id %></span></p>
@@ -9,7 +9,12 @@
       <p><strong>Edit History:</strong></p>
       <ul style="list-style-type: disc; padding-left: 20px; color: #555;">
         <% @tweet.edit_history_tweet_ids.each do |edit_id| %>
-          <li><%= edit_id %></li>
+          <li>
+            <a href="https://twitter.com/twitter/statuses/<%= edit_id %>" target="_blank" 
+               style="color: #d30001; text-decoration: none;">
+              <%= edit_id %>
+            </a>
+          </li>
         <% end %>
       </ul>
     <% else %>
@@ -18,7 +23,7 @@
 
     <div style="margin-top: 20px; text-align: center;">
       <a href="https://twitter.com/twitter/statuses/<%= @tweet.tweet_id %>" target="_blank" 
-         style="padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">
+         style="padding: 10px 20px; background-color: #d30001; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">
         View on X
       </a>
     </div>
@@ -26,6 +31,6 @@
 
   <div style="text-align: center; margin-top: 20px;">
     <%= link_to "Back", tweets_path, 
-                style: "padding: 10px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;" %>
+                style: "padding: 10px 20px; background-color: #d30001; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;" %>
   </div>
 </div>
