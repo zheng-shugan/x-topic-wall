@@ -4,10 +4,12 @@ class TweetsController < ApplicationController
   end
 
   def show
-    @tweet = params["tweet"]
-    # @tweet = Tweet.find_by!(tweet_id: params[:id])
-    # rescue ActiveRecord::RecordNotFound
-    # render file: Rails.root.join("public/404.html"), status: :not_found, layout: false
+    if params["tweet"]
+      @tweet = params["tweet"]
+    else
+      # 返回 404 页面
+      render file: "#{Rails.root}/public/404.html", status: 404
+    end
   end
 
   def fetch_tweets
@@ -19,7 +21,6 @@ class TweetsController < ApplicationController
     if tweets_data
       tweets_data["data"]
       # tweets_data["data"]
-      # service.save_tweets(tweets_data)
       # redirect_to tweets_path, notice: "成功获取 #{tweets_data['data'].size} 条推文"
     else
       # redirect_to tweets_path, alert: "获取推文失败，请检查日志"
