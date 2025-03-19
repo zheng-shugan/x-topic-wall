@@ -114,6 +114,8 @@ GEM
     erubi (1.13.1)
     et-orbi (1.2.11)
       tzinfo
+    ethon (0.16.0)
+      ffi (>= 1.15.0)
     faker (3.5.1)
       i18n (>= 1.8.11, < 2)
     ffi (1.17.1-aarch64-linux-gnu)
@@ -377,6 +379,8 @@ GEM
     turbo-rails (2.0.13)
       actionpack (>= 7.1.0)
       railties (>= 7.1.0)
+    typhoeus (1.4.1)
+      ethon (>= 0.9.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.4)
@@ -418,7 +422,7 @@ DEPENDENCIES
   debug
   dotenv-rails (~> 3.1)
   faker (~> 3.2)
-  http
+  http (~> 5.2)
   importmap-rails
   jbuilder
   kamal
@@ -436,6 +440,7 @@ DEPENDENCIES
   stimulus-rails
   thruster
   turbo-rails
+  typhoeus
   tzinfo-data
   web-console
 

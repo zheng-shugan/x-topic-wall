@@ -1,0 +1,19 @@
+<div id="tweets-container" style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
+  <% if @tweets.present? %>
+    <% @tweets.each do |tweet| %>
+      <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+        <p style="font-size: 16px; color: #555;"><%= tweet["text"] %></p>
+        <a href="https://twitter.com/twitter/statuses/<%= tweet["id"] %>" target="_blank" 
+           style="color: #d30001; text-decoration: none; margin-right: 10px;">
+          View On X
+        </a>
+        <%= link_to "View Detail", tweet_path(tweet["id"], tweet: tweet), 
+                  target: "_blank",
+                  class: "btn btn-primary", 
+                  style: "padding: 5px 10px; background-color: #d30001; color: white; text-decoration: none; border-radius: 3px;" %>
+      </div>
+    <% end %>
+  <% else %>
+    <p style="text-align: center; font-size: 18px; color: #999;">No tweets available at the moment.</p>
+  <% end %>
+</div>

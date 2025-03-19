@@ -1,51 +1,52 @@
-require "http"
+require "typhoeus"
+require "json"
 
 class TwitterMockService
   BASE_URL = "http://127.0.0.1:4523/m1/6052400-5742459-default/api/recent"
 
   def initialize
-    @client = HTTP.headers(
-      "Authorization" => "Bearer #{ENV['TWITTER_BEARER_TOKEN']}"
-    )
+    @bearer_token = ENV["BEARER_TOKEN"]
   end
 
-  def search_tweets(query: "#DeepSeek", max_results: 10, next_token: nil)
-    params = {
-      query: query,
-      max_results: max_results,
-      "tweet.fields": "edit_history_tweet_ids"
+  def search_tweets(query: "#DeepSeek", max_results: 10, start_time: nil, end_time: nil, expansions: nil, tweet_fields: nil, user_fields: nil)
+    # 构建查询参数
+    query_params = {
+      "query": query,
+      "max_results": max_results,
+      "tweet.fields": tweet_fields || "attachments,author_id,conversation_id,created_at,entities,id,lang",
+      "user.fields": user_fields || "description"
     }
 
-    params[:next_token] = next_token if next_token.present?
+    query_params["start_time"] = start_time if start_time.present?
+    query_params["end_time"] = end_time if end_time.present?
+    query_params["expansions"] = expansions if expansions.present?
 
-    response = @client.get(BASE_URL, params: params)
+    # 发起请求
+    response = make_request(BASE_URL, query_params)
 
-    if response.status.success?
-      JSON.parse(response.body.to_s)
+    if response.success?
+      JSON.parse(response.body)
     else
-      Rails.logger.error("Twitter API Error: #{response.status} - #{response.body}")
+      Rails.logger.error("Twitter API Error: #{response.code} - #{response.body}")
       nil
     end
-  rescue HTTP::Error => e
-    Rails.logger.error("HTTP Error: #{e.message}")
-    nil
   rescue JSON::ParserError => e
     Rails.logger.error("JSON Parse Error: #{e.message}")
     nil
   end
 
-  def save_tweets(tweets_data)
-    return unless tweets_data && tweets_data["data"]
+  private
 
-    tweets_data["data"].each do |tweet_data|
-      Tweet.create!(
-        tweet_id: tweet_data["id"],
-        text: tweet_data["text"],
-        edit_history_tweet_ids: tweet_data["edit_history_tweet_ids"]
-      )
-    rescue ActiveRecord::RecordNotUnique
-      # 忽略重复的推文
-      next
-    end
+  def make_request(url, params)
+    options = {
+      method: :get,
+      headers: {
+        "User-Agent": "v2RecentSearchRuby",
+        "Authorization": "Bearer #{@bearer_token}"
+      },
+      params: params
+    }
+
+    Typhoeus::Request.new(url, options).run
   end
 end

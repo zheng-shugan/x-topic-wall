@@ -1,17 +1,50 @@
 <h1 style="text-align: center; font-family: Arial, sans-serif; color: #d30001;">X Topic Wall</h1>
 
-<div style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
-  <% @tweets.each do |tweet| %>
-    <div style="border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
-      <p style="font-size: 16px; color: #555;"><%= tweet["text"] %></p>
-      <a href="https://twitter.com/twitter/statuses/<%= tweet["id"] %>" target="_blank" 
-        style="color: #d30001; text-decoration: none; margin-right: 10px;">
-        View On X
-      </a>
-      <%= link_to "View Detail", tweet_path(tweet["id"], tweet: tweet), 
-                  target: "_blank",
-                  class: "btn btn-primary", 
-                  style: "padding: 5px 10px; background-color: #d30001; color: white; text-decoration: none; border-radius: 3px;" %>
-    </div>
-  <% end %>
+<div style="text-align: center; margin-bottom: 20px;">
+  <input type="text" id="search-input" placeholder="Input Topic" 
+         style="padding: 10px; width: 300px; border: 1px solid #ccc; border-radius: 5px; margin-right: 10px;">
+  <button id="search-button" 
+          style="padding: 10px 20px; background-color: #d30001; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    Search
+  </button>
 </div>
+
+<div id="tweets-container" style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
+  <p style="text-align: center; font-size: 18px; color: #999;">No tweets available at the moment.</p>
+</div>
+
+<script>
+  document.getElementById('search-button').addEventListener('click', function() {
+    const query = document.getElementById('search-input').value;
+
+    if (query.trim()) {
+      fetch(`/tweets/fetch_tweets?query=${encodeURIComponent(query)}`, {
+        headers: {
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.text();
+        })
+        .then(html => {
+          const container = document.getElementById('tweets-container');
+          container.innerHTML = html; // 将返回的 HTML 渲染到页面中
+        })
+        .catch(error => {
+          console.error('Error fetching tweets:', error);
+          const container = document.getElementById('tweets-container');
+          container.innerHTML = '<p style="text-align: center; font-size: 18px; color: #999;">Failed to fetch tweets. Please try again later.</p>';
+        });
+    }
+  });
+
+  // 添加回车键搜索功能
+  document.getElementById('search-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.getElementById('search-button').click();
+    }
+  });
+</script>

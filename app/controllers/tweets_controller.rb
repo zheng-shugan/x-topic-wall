@@ -1,9 +1,10 @@
 class TweetsController < ApplicationController
   def index
-    @tweets = fetch_tweets
+    @tweets = []
   end
 
   def show
+    # 如果没有 tweet 参数
     if params["tweet"]
       @tweet = params["tweet"]
     else
@@ -12,18 +13,27 @@ class TweetsController < ApplicationController
     end
   end
 
-  def fetch_tweets
+  def fetch_mock_tweets
     service = TwitterMockService.new
-    tweets_data = service.search_tweets
+    query = params[:query] || "#DeepSeek"  # 如果没有搜索参数，使用默认值
+    tweets_data = service.search_tweets(query: query)
+    @tweets = tweets_data ? tweets_data["data"] : []
 
-    p tweets_data["data"]
+    respond_to do |format|
+      format.html { render partial: "tweets/list", locals: { tweets: @tweets } } # 默认 HTML 格式
+      format.js { render partial: "tweets/list", locals: { tweets: @tweets } }
+    end
+  end
 
-    if tweets_data
-      tweets_data["data"]
-      # tweets_data["data"]
-      # redirect_to tweets_path, notice: "成功获取 #{tweets_data['data'].size} 条推文"
-    else
-      # redirect_to tweets_path, alert: "获取推文失败，请检查日志"
+  def fetch_tweets
+    service = TwitterApiService.new
+    query = params[:query] || "#DeepSeek"  # 如果没有搜索参数，使用默认值
+    tweets_data = service.search_tweets(query: query)
+    @tweets = tweets_data ? tweets_data["data"] : []
+
+    respond_to do |format|
+      format.html { render partial: "tweets/list", locals: { tweets: @tweets } } # 默认 HTML 格式
+      format.js { render partial: "tweets/list", locals: { tweets: @tweets } }
     end
   end
 end

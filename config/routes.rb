@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "tweets#index"
 
-  resources :tweets, only: [ :index, :show ]
+  resources :tweets, only: [ :index, :show ] do
+    collection do
+      get :fetch_mock_tweets
+      get :fetch_tweets
+    end
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
