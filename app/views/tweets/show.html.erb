@@ -1,31 +1,162 @@
-<div style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
-  <h1 style="text-align: center; font-size: 28px; color: #d30001;">Tweet Details</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tweet Details - X Topic Wall</title>
+</head>
+<body>
+  <main id="main-content">
+    <h1 style="text-align: center; font-size: 28px; color: #CC0000;">Tweet Details</h1>
 
-  <div style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
-    <p><strong>Tweet ID:</strong> <span style="color: #555;"><%= @tweet["tweet_id"] %></span></p>
-    <p><strong>Text:</strong> <span style="color: #555;"><%= @tweet["text"] %></span></p>
+    <article class="tweet-details" 
+             role="article" 
+             aria-labelledby="tweet-title"
+             style="max-width: 800px; margin: 20px auto; font-family: Arial, sans-serif; color: #333; line-height: 1.6;">
+      <div class="tweet-content" 
+           style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+        <h2 id="tweet-title" class="visually-hidden">Tweet Information</h2>
+        
+        <dl class="tweet-info">
+          <dt><strong>Tweet ID:</strong></dt>
+          <dd><span style="color: #555;"><%= @tweet["tweet_id"] %></span></dd>
 
-    <% if @tweet["edit_history_tweet_ids"].present? %>
-      <p><strong>Edit History:</strong></p>
-      <ul style="list-style-type: disc; padding-left: 20px; color: #555;">
-        <% @tweet["edit_history_tweet_ids"].each do |edit_id| %>
-          <li>
-            <a href="https://twitter.com/twitter/statuses/<%= edit_id %>" target="_blank" 
-               style="color: #d30001; text-decoration: none;">
-              <%= edit_id %>
-            </a>
-          </li>
+          <dt><strong>Tweet Text:</strong></dt>
+          <dd><span style="color: #555;"><%= @tweet["text"] %></span></dd>
+        </dl>
+
+        <% if @tweet["edit_history_tweet_ids"].present? %>
+          <section aria-labelledby="edit-history-title">
+            <h3 id="edit-history-title">Edit History</h3>
+            <ul style="list-style-type: disc; padding-left: 20px; color: #555;">
+              <% @tweet["edit_history_tweet_ids"].each do |edit_id| %>
+                <li>
+                  <a href="https://twitter.com/twitter/statuses/<%= edit_id %>" 
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     class="edit-history-link"
+                     aria-label="View tweet version <%= edit_id %> on X (opens in new tab)">
+                    <%= edit_id %>
+                    <span class="visually-hidden">(opens in new tab)</span>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </section>
+        <% else %>
+          <p aria-live="polite" style="color: #999;">No edit history available.</p>
         <% end %>
-      </ul>
-    <% else %>
-      <p><em style="color: #999;">No edit history available.</em></p>
-    <% end %>
 
-    <div style="margin-top: 20px; text-align: center;">
-      <a href="https://twitter.com/twitter/statuses/<%= @tweet["tweet_id"] %>" target="_blank" 
-         style="padding: 10px 20px; background-color: #d30001; color: white; text-decoration: none; border-radius: 5px; font-size: 16px;">
-        View on X
-      </a>
-    </div>
-  </div>
-</div>
+        <div class="tweet-actions" 
+             style="margin-top: 20px; text-align: center;"
+             role="group" 
+             aria-label="Tweet actions">
+          <a href="https://twitter.com/twitter/statuses/<%= @tweet["tweet_id"] %>" 
+             target="_blank"
+             rel="noopener noreferrer"
+             class="tweet-link"
+             aria-label="View tweet on X (opens in new tab)">
+            View on X
+            <span class="visually-hidden">(opens in new tab)</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <style>
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .tweet-info {
+      margin: 0;
+      padding: 0;
+    }
+
+    .tweet-info dt {
+      margin-top: 1em;
+      font-weight: bold;
+    }
+
+    .tweet-info dd {
+      margin-left: 0;
+      margin-bottom: 1em;
+    }
+
+    .tweet-link {
+      color: #333333;
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 2px solid #CC0000;
+      border-radius: 5px;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .tweet-link:hover,
+    .tweet-link:focus {
+      background-color: #CC0000;
+      color: white;
+      outline: none;
+    }
+
+    .edit-history-link {
+      color: #333333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .edit-history-link:hover {
+      color: #CC0000;
+      text-decoration: underline;
+    }
+
+    .edit-history-link:focus {
+      outline: 2px solid #CC0000;
+      outline-offset: 2px;
+      color: #CC0000;
+    }
+
+    /* 高对比度模式 */
+    [data-theme="high-contrast"] .tweet-link {
+      border: 2px solid #000000;
+      color: #000000;
+    }
+
+    [data-theme="high-contrast"] .tweet-link:hover,
+    [data-theme="high-contrast"] .tweet-link:focus {
+      background-color: #000000;
+      color: white;
+    }
+
+    [data-theme="high-contrast"] .edit-history-link {
+      color: #000000;
+    }
+
+    [data-theme="high-contrast"] .edit-history-link:focus {
+      outline: 2px solid #000000;
+      color: #000000;
+    }
+
+    /* 焦点样式 */
+    *:focus {
+      outline: 2px solid #CC0000;
+      outline-offset: 2px;
+    }
+
+    [data-theme="high-contrast"] *:focus {
+      outline: 2px solid #000000;
+    }
+  </style>
+</body>
+</html>
