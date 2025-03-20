@@ -1,24 +1,49 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Quick Start
 
-Things you may want to cover:
+复制一份 `.env.example` 文件重命名为 `.env` 并填入自己的 BEARER_TOKEN
 
-* Ruby version
+安装依赖：
 
-* System dependencies
+```
+bundle install
+```
 
-* Configuration
+启动项目：
 
-* Database creation
+```
+bin/rails server
+```
 
-* Database initialization
+在浏览器访问：
 
-* How to run the test suite
+```
+localhost:3000
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+或
 
-* Deployment instructions
+```
+127.0.0.1:3000
+```
 
-* ...
+## 项目预览
+
+首页：
+
+![首页](./doc/images/1.jpg)
+
+查询页面：
+
+![查询](./doc/images/2.jpg)
+
+详情界面：
+
+![详情界面](./doc/images/3.jpg)
+
+## 项目实现
+
+通过请求 [Recent Search](https://docs.x.com/x-api/posts/recent-search) 这个 API 来实现对话题的获取，具体实现代码在 `app/services/twitter_api_service.rb` 下。
+
+获取新推文的方式因为官方没有给出 API 所以是通过轮询的方式来实现的，每次收到请求之后重新渲染 `view/tweets/_list.html.erb` 实现获取新推文。
