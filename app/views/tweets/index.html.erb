@@ -7,6 +7,10 @@
           style="padding: 10px 20px; background-color: #d30001; color: white; border: none; border-radius: 5px; cursor: pointer;">
     Search
   </button>
+  <button id="toggle-polling" 
+          style="padding: 10px 20px; background-color: #1DA1F2; color: white; border: none; border-radius: 5px; cursor: pointer; margin-left: 10px;">
+    Search and Polling
+  </button>
 </div>
 
 <div id="tweets-container" style="max-width: 800px; margin: 0 auto; font-family: Arial, sans-serif;">
@@ -14,30 +18,81 @@
 </div>
 
 <script>
+  let pollingInterval = null;
+  let currentQuery = '';
+  const POLLING_INTERVAL = 60000; // 1分钟
+
+  function fetchTweets(query) {
+    if (!query.trim()) return;
+
+    fetch(`/tweets/fetch_tweets?query=${encodeURIComponent(query)}`, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.text();
+    })
+    .then(html => {
+      const container = document.getElementById('tweets-container');
+      container.innerHTML = html;
+    })
+    .catch(error => {
+      console.error('Error fetching tweets:', error);
+      const container = document.getElementById('tweets-container');
+      container.innerHTML = '<p style="text-align: center; font-size: 18px; color: #999;">Failed to fetch tweets. Please try again later.</p>';
+    });
+  }
+
+  function startPolling() {
+    if (pollingInterval) return;
+    
+    currentQuery = document.getElementById('search-input').value;
+    if (!currentQuery.trim()) {
+      alert('Please enter a search query first');
+      return;
+    }
+
+    // 立即执行一次
+    fetchTweets(currentQuery);
+    
+    // 设置定时器
+    pollingInterval = setInterval(() => {
+      fetchTweets(currentQuery);
+    }, POLLING_INTERVAL);
+
+    // 更新按钮状态
+    document.getElementById('toggle-polling').textContent = 'Stop Polling';
+    document.getElementById('toggle-polling').style.backgroundColor = '#dc3545';
+  }
+
+  function stopPolling() {
+    if (pollingInterval) {
+      clearInterval(pollingInterval);
+      pollingInterval = null;
+      document.getElementById('toggle-polling').textContent = 'Start Polling';
+      document.getElementById('toggle-polling').style.backgroundColor = '#1DA1F2';
+    }
+  }
+
+  // 搜索按钮点击事件
   document.getElementById('search-button').addEventListener('click', function() {
     const query = document.getElementById('search-input').value;
-
     if (query.trim()) {
-      fetch(`/tweets/fetch_tweets?query=${encodeURIComponent(query)}`, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.text();
-        })
-        .then(html => {
-          const container = document.getElementById('tweets-container');
-          container.innerHTML = html; // 将返回的 HTML 渲染到页面中
-        })
-        .catch(error => {
-          console.error('Error fetching tweets:', error);
-          const container = document.getElementById('tweets-container');
-          container.innerHTML = '<p style="text-align: center; font-size: 18px; color: #999;">Failed to fetch tweets. Please try again later.</p>';
-        });
+      currentQuery = query;
+      fetchTweets(query);
+    }
+  });
+
+  // 轮询开关按钮点击事件
+  document.getElementById('toggle-polling').addEventListener('click', function() {
+    if (pollingInterval) {
+      stopPolling();
+    } else {
+      startPolling();
     }
   });
 
@@ -47,4 +102,7 @@
       document.getElementById('search-button').click();
     }
   });
+
+  // 页面关闭时停止轮询
+  window.addEventListener('beforeunload', stopPolling);
 </script>
