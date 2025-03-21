@@ -2,7 +2,7 @@
 
 ## Quick Start
 
-复制一份 `.env.example` 文件重命名为 `.env` 并填入自己的 BEARER_TOKEN
+复制一份 `.env.example` 文件重命名为 `.env` 并填入自己的 `BEARER_TOKEN`。
 
 安装依赖：
 
@@ -54,3 +54,9 @@ localhost:3000
 通过请求 [Recent Search](https://docs.x.com/x-api/posts/recent-search) 这个 API 来实现对话题的获取，具体实现代码在 `app/services/twitter_api_service.rb` 下。
 
 获取新推文的方式因为官方没有给出 API 所以是通过轮询的方式来实现的，每次收到请求之后重新渲染 `view/tweets/_list.html.erb` 实现获取新推文。
+
+## Useful Link
+
+- Ruby On Rails：https://rubyonrails.org/
+- X 开发者：https://developer.x.com/en
+- X API 文档：https://docs.x.com/x-api/introduction
